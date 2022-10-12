@@ -6,14 +6,14 @@
 
 class Cparam
 {
-	function __construct($param)
+	function __construct($strParam)
 	{
-		echo "constructor called with parameter ".$param."<br>";
+		echo "constructor called with parameter ".$strParam."<br>";
 	}
 }
-$Ca = new Cparam("first");
-$Cb = new Cparam("second");
-$Cc = new Cparam("1");
+$Cparam = new Cparam("first");
+$Cparam = new Cparam("second");
+$Cparam = new Cparam("third");
 echo "<br>";
 echo "Line - ";
 echo __LINE__;
@@ -25,9 +25,9 @@ echo "<br><br>";
 Class Cclassname
 {
 	public $attribute;
-	function operation($param)
+	function operation($nParam)
 	{
-		$this->attribute = $param;
+		$this->attribute = $nParam;
 		echo $this->attribute;
 	}
 }
@@ -38,9 +38,9 @@ Class Classname
 {
 	public $attribute;
 }
-$a = new Cclassname();
-$a -> attribute = "value";
-echo $a->attribute;
+$Cclassname = new Cclassname();
+$Cclassname -> attribute = "nValue";
+echo $Cclassname->attribute;
 
 echo "<br>";
 echo "Line - ";
@@ -53,23 +53,23 @@ echo "<br><br>";
 Class Cclassname1
 {
 	public $attribute;
-	function __get($name)
+	function __get($strName)
 	{
-		return $this->name;
+		return $this->strName;
 	}
-	function __set($name, $value)
+	function __set($strName, $value)
 	{
 		//attribute 값이 0~100
-		if(($name="attribute")&&(value>=0)&&(value<=100))
-		//attribute = value
-		$this->attribute = $value;
-		$this->name = $value;
+		if(($strName="attribute")&&(nValue>=0)&&(nValue<=100))
+		//attribute = nValue
+		$this->attribute = $nValue;
+		$this->strName = $nValue;
 	}
 }
 
-$a = new Cclassname1();
-$a->attribute = 5;
-var_dump ($a);
+$Cclassname1 = new Cclassname1();
+$Cclassname1->attribute = 5;
+var_dump ($Cclassname1);
 echo "<br>";
 echo "Line - ";
 echo __LINE__;
@@ -81,13 +81,13 @@ echo "<br><br>";
 Class Cclassname2
 {
 	public $attribute;
-	public function __get($name)
+	public function __get($strName)
 	{
-		return $this->name;
+		return $this->strName;
 	}
-	public function __set($name, $value)
+	public function __set($strName, $nValue)
 	{
-		$this->name = $value;
+		$this->strName = $nValue;
 	}
 }
 
@@ -96,25 +96,25 @@ Class Cclassname2
 //연산 호출
 Class Cclassname3
 {
-	function operation1()
+	function fnOperation1()
 	{
-		echo "operation1<br>";
+		echo "fnOperation1<br>";
 	}
-	function operation2($param1, $param2)
+	function fnOperation2($nParam1, $strParam2)
 	{
-		echo "operation2 $param1 : $param2";
+		echo "fnOperation2 $nParam1 : $strParam2";
 	}
 }
-$a = new Cclassname3();
-$a->operation1();
-$a->operation2(12, "test");
+$fnOperationA = new Cclassname3();
+$fnOperationA->fnOperation1();
+$fnOperationA->fnOperation2(12, "test");
 echo "<br>";
 echo "Line - ";
 echo __LINE__;
 echo "<br><br>";
 
-$x = $a->operation1();
-$y = $a->operation2(12, "test");
+$fnOperationX = $fnOperationA->fnOperation1();
+$fnOperationY = $fnOperationA->fnOperation2(12, "test");
 echo "<br>";
 echo "Line - ";
 echo __LINE__;
@@ -172,8 +172,6 @@ Class Cprivate1
 		echo "operation3 called";
 	}
 }
-
-
 //Class Cprivate2 extends Cprivate1
 //{
 //	function __construct()
@@ -196,10 +194,12 @@ echo "<br>";
 //클래스 상수 사용
 
 Class Math{
-	const pi = 3.14159;
+	//const -> Class에서 상수 정의할 때 사용 조건문에서 정의 불가
+	//const는 대소문자 구별하지 않게 못함
+	const nPi = 3.14159;
 }
 //클래스당 상수에 접근하려면 ::연산자를 사용해 명시하면 됨
-echo " Math::pi = ".Math::pi."\n";
+echo " Math::nPi = ".Math::nPi."\n";
 echo "<br>";
 echo "Line - ";
 echo __LINE__;
@@ -225,11 +225,6 @@ echo "<br><br>";
 
 
 
-
-
-
-
-
 class CPlus
 {
     // member variable
@@ -244,7 +239,7 @@ class CPlus
     }
 
     // method
-    public function tell()
+    public function strTell()
     {
         echo "my name is {$this->strName} .";
         echo " and my age is {$this->nAge} .";
@@ -270,17 +265,48 @@ class CPlus
 }
 
 //
-$sample = new CPlus();
-$sample->fnAdd_age(3);
-$sample->tell();
+$CPlus = new CPlus();
+$CPlus->fnAdd_age(3);
+$CPlus->strTell();
 
 
 //static을 calss 내에서 변수나 함수에 적용 시 다른 곳에서도 호출 가능
 //클래스 밖에서 해당하는 함수나 변수에 접근하기 위해서는 인스턴스를 생성해서 접근 해야하는데
-//static을 사용하면 클래스명::접근변수,함수 작성하 시 접근 가능
+//static을 사용하면 클래스명::접근변수,함수 작성시 접근 가능
 echo "<br />";
-CPlus::fnFactory()->fnAdd_age(2)->tell();
-CPlus::fnFactory2()->fnAdd_age(3)->tell();
+CPlus::fnFactory()->fnAdd_age(2)->strTell();
+CPlus::fnFactory2()->fnAdd_age(3)->strTell();
+
+echo "<br>";
+echo "Line - ";
+echo __LINE__;
+echo "<br><br>";
+
+
+// instanceof는 클래스인지 판단하는 함수
+if($CPlus instanceof CPlus == true){
+	echo "true";
+}else{
+	echo " 트라이캐치 예외처리로 바꿀예정";
+}
+echo "<br>";
+echo "Line - ";
+echo __LINE__;
+echo "<br><br>";
+
+
+//CloneCPlus는 CPlus와 같은 속성값을 가짐 (복제본)
+$CloneCPlus = Clone $CPlus;
+$CloneCPlus= new CPlus();
+$CloneCPlus->fnAdd_age(3);
+$CloneCPlus->strTell();
+
+
+
+//__autoload, iterator, toString,
+
+
+
 
 
 
