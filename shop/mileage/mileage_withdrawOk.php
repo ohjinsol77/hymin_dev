@@ -16,13 +16,16 @@ error_reporting(E_ALL);
 <?php
 echo "출금 프로세스 시작\n\n";
 try {
-    $driver = 'mysqli';
+	///mysql과 db연결과정
+	$driver = 'mysqli';
     $db = newAdoConnection($driver);
-    $db->debug = true;
-
-    $db->connect('localhost', 'root', 'Kdkdldpadkdl123$%^', 'study');
-
+    $db->debug = false;
+    $db->socket = '/var/run/mysqld/mysql_3306.sock';
+	///db 연결
+    $db->connect('localhost', 'root', 'Itemmania1324%^', 'study');
+	///db가 연결되지 않으면
     if(!$db){
+		///예외처리
         throw new Exception("데이터 연결오류",1);
     }
 
@@ -48,53 +51,65 @@ try {
     //변수체크
 
     echo "변수 체크\n";
-
+	///만약 member_bank가 빈값이거나, member_bank가 존재하지 않으면
     if($member_bank==null || !isset($member_bank)){
+		///예외처리(메시지,코드)
         throw new Exception("비정상 출금/ 다시 시도해주세요",8898);
-
-    }
+    }///만약 pointPrice빈값이고 $pointPrice가 0이하이면
     if ($pointPrice==null && $pointPrice<=0){
+		///예외처리
         throw new Exception("비정상 출금/ 다시 시도해주세요",8898);
-    }
+    }///member_bank가 빈값이거나 member_bank가 0이면
     if ($member_bank==null || empty($member_bank)){
+		///예외처리
         throw new Exception("비정상 출금/ 다시 시도해주세요",8898);
-    }
+    }///membeR_bankNum이 빈값이거나 0원이면
     if ($member_bankNum==null || empty($member_bankNum)){
+		///예외처리
         throw new Exception("비정상 출금/ 다시 시도해주세요",8898);
-    }
+    }///sel_sum이 0원 이하이거나 withdraw_price보다 작다면
     if($sel_sum<=0 || $sel_sum<$withdraw_price){
+		///예외처리
         throw new Exception("비정상 출금/ 다시 시도해주세요",8898);
     }
 
     // 충전 전 회원정보 조회 & 저장 ▼ //
     echo"회원 정보 조회 \n";
-
+	///member테이블에서 num,id,name,tel을 조회하는데 조건은 member_num과 폼에서 받은 member_num값이 같을 때
     $rs = $db->Execute("select member_num, member_id, member_name, member_tel from member where member_num='".$member_num."'");
-
+	///ㅁ나약 rs가 빈값이면
     if ($rs == null) {
+		///예외처리
         throw new Exception ("정보조회 오류 다시 시도하세요", 81);
     }
-
+	
     // 회원조회 결과
-    while (!$rs->EOF) {
+    ///rs가 아닌값이 EOF를 만나면 종료
+	while (!$rs->EOF) {
         $mem_num = $rs->fields[0];
         $mem_id = $rs->fields[1];
         $mem_name = $rs->fields[2];
         $mem_tel= $rs->fields[3];
+		///다음 커서로 이동
         $rs->MoveNext();
     }
 
     echo "user_id=$mem_id";
+	///만약 mem_num이 빈겂이고 member_num변수가 존재하지 않으면
     if (empty($mem_num) & !isset($member_num)) {
+		///예외처리
         throw new Exception("정보조회 오류",4956);
-    }
+    }///mem_id가 존재하면 true이고 오른쪽으로 넘어가서 mem_id가 존재하지 않는지 확인하고 true이면 다시 오른쪽으로 넘어가서 세션값이 mem_id와 일치하지 않는지 확인
     if (empty($mem_id) && !isset($mem_id) && $_SESSION['member_Session_id']!=$mem_id) {
+		///예외처리
         throw new Exception("정보조회 오류",4956);
-    }
+    }///mem_nam이 빈값이고 member_name변수가 없으면
     if (empty($mem_name) & !isset($member_name)) {
+		///예외처리
         throw new Exception("정보조회 오류",4956);
-    }
+    }///mem_tel이 빈값이고 member_tel변수가 존재하지 않으면
     if (empty($mem_tel) & !isset($member_tel)) {
+		///예외처리
         throw new Exception("정보조회 오류",4956);
     }
 
@@ -103,16 +118,20 @@ try {
     // 충전 전 회원정보 조회 & 저장 ▲ //
 
     echo "트랜젝션 시작\n";
+	///트랜잭션 시작
     $trans_check=$db->StartTrans();
+	///trans_check가 빈값이면
     if ($trans_check == null) {
+		///예외처리
         throw new Exception("트랜젝션오류", 44);
     }
 
 
     echo "보유 마일리지 조회\n";
-// 기존에 멤버가 가지고 있는 마일리지 조회
+	// 기존에 멤버가 가지고 있는 마일리지 조회
+	///mileage테이블에서 id,cash_amount,credit_amount,phone_amount를 조회하는데 조건은 meeber_num이 $member_num과 같고 레코드 락을 걸어 다른 사람이 이 행을 건들지 못하도록 막음
     $rs = $db->Execute("select mileage_id, cash_amount, credit_amount, phone_amount from mileage where member_num=$member_num  for update");
-
+	///rs가 아닐때까지 루프를 돌린다
     while (!$rs->EOF) {
         $mileage_id = $rs->fields[0];
         $mem_cash = $rs->fields[1];
@@ -120,7 +139,7 @@ try {
         $mem_phone = $rs->fields[3];
         $rs->MoveNext();
     }
-
+	///만약 db에서 변경된 횟수가 1이이면
     if ($db->Affected_Rows() <1){
         throw new Exception("정보조회 오류",5490);
     }

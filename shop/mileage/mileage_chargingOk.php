@@ -8,11 +8,12 @@ include_once("../adodb5/adodb.inc.php");
 ini_set('display_errors', true);
 error_reporting(E_ALL);
 try {
-    $driver = 'mysqli';
+	$driver = 'mysqli';
     $db = newAdoConnection($driver);
-    $db->debug = true;
-
-    $db->connect('localhost', 'root', 'Kdkdldpadkdl123$%^', 'study');
+    $db->debug = false;
+    $db->socket = '/var/run/mysqld/mysql_3306.sock';
+	///db 연결
+    $db->connect('localhost', 'root', 'Itemmania1324%^', 'study');
 
     ?>
 
@@ -265,7 +266,8 @@ try {
     }
 	///detail_id에서 auto_increment값 가져옴
     $detail_id = $db->Insert_id();
-
+	
+	
     // 디테일 리스트 작성
     echo "디테일 로그 작성 \n";
 	///mile_detail_log에 데이터 추가(sucess)
@@ -347,10 +349,14 @@ try {
     }
 	///변수 삭제
     unset($sql);
-
+	
     echo "디테일로그 상태변경";
 	///mile_detail_log테이블에 mile_state값을 sucess로 수정 조건은 detail_id가 $detail_id와 같아야 함
-    $db->Execute("update mile_detail_log set mile_state='sucess' where detail_id='" . $detail_id . "' ");
+
+	///*************************************수정**********************************************///
+	///$db->Execute("update mile_detail_log set mile_state='sucess' where detail_id='" . $detail_id . "' ");
+	///mile_state 자료형과 일치하지 않음 enum(continue,success,cancel)만 가능해서 오타로 인한 오류
+    $db->Execute("update mile_detail_log set mile_state='success' where detail_id='" . $detail_id . "' ");
 	///만약 db에서 변경된 횟수가 1보다 작으면
     if ($db->Affected_Rows() <1){
 		///예외처리
