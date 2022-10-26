@@ -1,19 +1,10 @@
 <?php
 include("../_inc/header.php");
 require("../adodb5/adodb.inc.php");
+///DB연결 (db연결 include로 수정)
+include('../_inc/DBconnect.php');
 ini_set('display_errors', true);
 error_reporting(E_ALL);
-try {
-	$driver = 'mysqli';
-    $db = newAdoConnection($driver);
-    $db->debug = false;
-    $db->socket = '/var/run/mysqld/mysql_3306.sock';
-	///db 연결
-    $db->connect('localhost', 'root', 'Itemmania1324%^', 'study');
-
-    if(!$db){
-        throw new Exception("데이터 연결오류",1);
-    }
 
     $member_Num = $_SESSION['member_Session_number'];
     $font_color = "WHITE";
@@ -32,7 +23,7 @@ try {
             <li id="thCol">잔액</li>
         </ul>
         <?php
-
+try{
         $trans_check=$db->StartTrans();
         $rs = $db->Execute("select credit_regdate, credit_type, credit_price, credit_amount from credit_mileage where member_num=$member_Num order by credit_regdate desc limit 10 for update");
         if (!$rs) {

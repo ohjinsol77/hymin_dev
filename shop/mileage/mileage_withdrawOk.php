@@ -182,23 +182,49 @@ try {
             } else {                                      // 핸드폰이 총 금액으로 마무리 계산,
                 $mem_phone = $mem_phone - $sel_sum;
                 $recod_phone = $sel_sum;
-                $sel_sum = 0;
+           
             }
         } else {                                          // 신용카드가 총 금액보다 클 때
             $mem_credit = $mem_credit - $sel_sum;
             $recod_credit = $sel_sum;
+			///recod_phone변수를 정해주지 않으면 변수가 없다는 오류 출력
+			$recod_phone = 0;
+            $sel_sum=0;
+
+			/**************************************
+			$mem_credit = $mem_credit - $sel_sum;
+            $recod_credit = $sel_sum;
+			///recod_phone변수를 정해주지 않으면 변수가 없다는 오류 출력
+			$recod_phone = 0;
             $sel_sum = 0;
+			**************************************/
         }
-    } else {                                              // 현금이 총 금액보다 클 때
+    } else {
+		$mem_cash = $mem_cash - $sel_sum;
+		$recod_cash = $sel_sum;
+		///credit,phone부분 변수 정해주지 않았을 때 변수 없다는 오류 출력
+		$recod_credit = 0;
+		$recod_phone = 0;
+		$sel_sum=0;
+		
+		
+		/**************************************
+		// 현금이 총 금액보다 클 때
         $mem_cash = $mem_cash - $sel_sum;
         $recod_cash = $sel_sum;
         $sel_sum = 0;
+		********************/
     }
 
     echo "// 캐쉬 :" . $mem_cash;
     echo "// 카드:" . $mem_credit;
     echo "// 폰:" . $mem_phone;
-    echo "// 썸:" . $sel_sum . "<br/>" . "<br/>";
+	///sel_sum으로 하게되면 초기화된 값으로 0이 나오게 돼서 총 출금 값을 알 수 없음
+	echo "// 출금 값:" . $recod_cash + $recod_credit + $recod_phone . "<br/>" . "<br/>";
+	/***********************************************
+    echo "// 출금 값:" . $sel_sum . "<br/>" . "<br/>";
+	************************************************/
+
 
 
     echo $recod_cash . "<br/>";

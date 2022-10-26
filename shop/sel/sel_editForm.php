@@ -4,36 +4,29 @@
 
 include("../_inc/header.php");
 include("../adodb5/adodb.inc.php");
+///DB연결 (db연결 include로 수정)
+include('../_inc/DBconnect.php');
+
 ini_set('display_errors', true);
 error_reporting(E_ALL);
-try {
-	$driver = 'mysqli';
-    $db = newAdoConnection($driver);
-    $db->debug = false;
-    $db->socket = '/var/run/mysqld/mysql_3306.sock';
-	///db 연결
-    $db->connect('localhost', 'root', 'Itemmania1324%^', 'study');
-} catch (Exception $e) {
-    die($e->getMessage());   // 에러메세지 출력
-}
+///sel_id를 get메소드로 가져옴 url에 아이디 흔적이 남음
 $sel_id = $_GET['sel_id'];
 
-
+///admin 세션 가져오기
 $admin_checker = $_SESSION['member_Session_admin'];
-
+///admin_checker가 1이면
 if ($admin_checker == 1){     // 등록 권한이 있는지 체크
-
-$rs = $db->Execute("select sel.sel_title, sel.sel_price, sel.sel_quantity, sel.sel_contents, img.image_filename, img.image_url from sel sel join sel_image img on sel.sel_id = img.sel_id where sel.sel_id=$sel_id");
-
-while (!$rs->EOF) {
-
-    $sel_title = $rs->fields[0];
-    $sel_price = $rs->fields[1];
-    $sel_quantity = $rs->fields[2];
-    $sel_contents = $rs->fields[3];
-    $sel_img = $rs->fields[4];
-    $img_url = $rs->fields[5];
-    $rs->MoveNext();
+	///sel테이블과 sel image테이블을 조인하여 title,price,quantity,contents,filename,url을 조회하는데 sle_id=$sel_id여야하고 sel.id와 img.id가 같은 데이터 조회한다.
+	$rs = $db->Execute("select sel.sel_title, sel.sel_price, sel.sel_quantity, sel.sel_contents, img.image_filename, img.image_url from sel sel join sel_image img on sel.sel_id = img.sel_id where sel.sel_id=$sel_id");
+	///rs가 아닌 값이 EOF를 만날때까지 movenext를 통해 다음 쿼리진행
+	while (!$rs->EOF) {
+		$sel_title = $rs->fields[0];
+		$sel_price = $rs->fields[1];
+	    $sel_quantity = $rs->fields[2];
+	    $sel_contents = $rs->fields[3];
+	    $sel_img = $rs->fields[4];
+	    $img_url = $rs->fields[5];
+	    $rs->MoveNext();
 }
 
 
@@ -85,15 +78,22 @@ while (!$rs->EOF) {
 
                 $img_width = $imgsize[0];       // 가로사이즈 선언
                 $img_height = $imgsize[1];     // 세로사이즈 선언
-
+				///넓이가 100보다 클 때
                 if ($img_width > $img_w) {
-                    $re_w_size = $img_w; // 가로사이즈가 지정사이즈보다 크면 지정사이즈로 고정
-                } else {
+                    ///지정넓이는 100
+					$re_w_size = $img_w; // 가로사이즈가 지정사이즈보다 크면 지정사이즈로 고정
+				///넓이가 100보다 작거나 같을 때
+				} else {
+					///지정 넓이는 이미지 사이즈 유지
                     $re_w_size = $img_width; // 가로사이즈가 지정사이즈보다 작거나 같으면 기존사이즈 유지
                 }
+				///세로사이즈가 100보다 클 때
                 if ($img_height > $img_h) {
+					///세로 사이즈는 100
                     $re_h_size = $img_h; // 세로사이즈가 지정사이즈보다 크면 지정사이즈로 고정
-                } else {
+                ///세로 사이즈가 100보다 작거나 같을 때
+				} else {
+					///세로 사이즈는 이미지 사이즈 유지
                     $re_h_size = $img_height; // 세로사이즈가 지정사이즈보다 작거나 같으면 기존사이즈 유지}
                 }
 

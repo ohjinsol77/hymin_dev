@@ -3,19 +3,13 @@
 include("../_inc/header.php");
 ///adodb정보 받아오기
 include("../adodb5/adodb.inc.php");
+
+///DB연결 (db연결 include로 수정)
+include('../_inc/DBconnect.php');
+
 ini_set('display_errors', true);
 error_reporting(E_ALL);
-try {
-	$driver = 'mysqli';
-    $db = newAdoConnection($driver);
-    $db->debug = false;
-    $db->socket = '/var/run/mysqld/mysql_3306.sock';
-	///db 연결
-    $db->connect('localhost', 'root', 'Itemmania1324%^', 'study');
-} catch (Exception $e) {
-	///에러 메시지 출력
-    die($e->getMessage());   // 에러메세지 출력
-}
+
 
 $member_id = "";
 $member_tel = 0;

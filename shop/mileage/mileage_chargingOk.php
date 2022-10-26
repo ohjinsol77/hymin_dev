@@ -2,30 +2,22 @@
 /*마일리지 충전*/
 include("../_inc/header.php");
 include_once("../adodb5/adodb.inc.php");
+///DB연결
+include('../_inc/DBconnect.php');
 //include("../db/dbconn.php");
 //include_once ("../class/ShopFunction.php");
+?>
 
-ini_set('display_errors', true);
-error_reporting(E_ALL);
-try {
-	$driver = 'mysqli';
-    $db = newAdoConnection($driver);
-    $db->debug = false;
-    $db->socket = '/var/run/mysqld/mysql_3306.sock';
-	///db 연결
-    $db->connect('localhost', 'root', 'Itemmania1324%^', 'study');
-
-    ?>
-
-    <html>
+<html>
 <body>
 <h2>충전 결과 확인 페이지</h2>
 <hr width="80%"/>
 <div id="#contsRow">
 
 
-    <?php
-
+<?php
+ini_set('display_errors', true);
+	error_reporting(E_ALL);
 
     //$ShopFunction = new ShopFunction();
 
@@ -50,10 +42,9 @@ try {
 
 
     // 기본 변수 설정 ▲ //
-
-
     echo $nMilprice . "원 충전 프로세스";
 
+try{
     //스텝체크
 	/// step값이 1이 아니고 $step이 null이고 $step변수가 존재하지 않으면
     if ($step != 1 & empty($step) & !isset($step)) {

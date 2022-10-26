@@ -1,6 +1,8 @@
 <?php
 include("../_inc/header.php");
 require("../adodb5/adodb.inc.php");
+///DB연결 (db연결 include로 수정)
+include('../_inc/DBconnect.php');
 error_reporting(E_ALL);
 ini_set("display_errors", 1);
 ?>
@@ -17,19 +19,8 @@ ini_set("display_errors", 1);
 
 
 
-try {
-		$driver = 'mysqli';
-    $db = newAdoConnection($driver);
-    $db->debug = false;
-    $db->socket = '/var/run/mysqld/mysql_3306.sock';
-	///db 연결
-    $db->connect('localhost', 'root', 'Itemmania1324%^', 'study');
 
-		///만약 db연결이 안되면
-        if(!$db){
-			///예외처리
-            throw new Exception("db연결 오류");
-        }
+
 		///db 트랜잭션 시작
         $trans_check=$db->StartTrans();
 	///rs에 mem에서 번호 아이디 비밀번호 사용자정보와 mil에서 아이디를 검색 / member mem과 mileage mil 조인하고 mem과 mil의 멤버번호가 같을때 조인하고
@@ -39,6 +30,7 @@ try {
 						from member mem join mileage mil 
 						on mem.member_num=mil.member_num  
 						where mem.member_id='$member_id' and mem.member_password=SHA1('$member_password') ");
+try {
 	///만약 rs값이 아닐 때
     if (!$rs) {
 		///예외처리

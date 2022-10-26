@@ -1,6 +1,6 @@
 <?php
 
-
+session_start();
 //include('../css/style.css');
 $basepath="http://localhost/";
 $admin_checker = $_SESSION['member_Session_admin'];

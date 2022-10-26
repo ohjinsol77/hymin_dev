@@ -1,21 +1,12 @@
 <?php
 include("../_inc/header.php");
 require("../adodb5/adodb.inc.php");
+///db연결
+include('../_inc/DBconnect.php');
 ini_set('display_errors', true);
 error_reporting(E_ALL);
-try {
-	$driver = 'mysqli';
-    $db = newAdoConnection($driver);
-    $db->debug = false;
-    $db->socket = '/var/run/mysqld/mysql_3306.sock';
-	///db 연결
-    $db->connect('localhost', 'root', 'Itemmania1324%^', 'study');
-    if(!$db){
-        throw new Exception("데이터 연결오류",1);
-    }
 
 $count=1;
-
 $nMember_num = $_SESSION['member_Session_number'];
 
 ?>
@@ -33,7 +24,7 @@ $nMember_num = $_SESSION['member_Session_number'];
             <li id="thCol">구매일</li>
         </ul>
         <?php
-
+try{
         $trans_check=$db->StartTrans();
 
         $rs = $db->Execute("select buy.sel_id, sel.sel_title, buy.buy_amount, buy.buy_date from buy buy join sel sel on buy.sel_id=sel.sel_id where buy.member_num=$nMember_num order by buy.buy_date desc  ");

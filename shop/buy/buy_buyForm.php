@@ -3,25 +3,17 @@
 /*일반구매 페이지*/
 include("../_inc/header.php");
 require("../adodb5/adodb.inc.php");
+///db연결
+include('../_inc/DBconnect.php');
 ini_set('display_errors', true);
 error_reporting(E_ALL);
+
+$trans_check=null;
+$sel_id = $_POST['sel_id'];    // 폼에서 넘어온 판매 번호
+$step = $_POST['step'];        // 스텝 체크
+$member_num = $_SESSION['member_Session_number'];
+
 try {
-	$driver = 'mysqli';
-    $db = newAdoConnection($driver);
-    $db->debug = false;
-    $db->socket = '/var/run/mysqld/mysql_3306.sock';
-	///db 연결
-    $db->connect('localhost', 'root', 'Itemmania1324%^', 'study');
-    $trans_check=null;
-    if(!$db){
-        throw new Exception("데이터 연결오류",1);
-    }
-
-
-    $sel_id = $_POST['sel_id'];    // 폼에서 넘어온 판매 번호
-    $step = $_POST['step'];        // 스텝 체크
-    $member_num = $_SESSION['member_Session_number'];
-
     if (!isset($sel_id) & empty($sel_id)) {   // 판매번호 체크
 
         throw new Exception("판매번호 오류", 99);

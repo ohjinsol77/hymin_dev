@@ -102,12 +102,12 @@ Class ShopFunction
         var_dump($result);
 		///result는 sql문을 실행
         $result=$this->db->Execute($sql);
-		///result값이 끝날때까지 반복
+		///result가 아닌값이 eof만날때까지 반복
         while(!$result->EOF)
         {
 			///fields함수에 
             $ResultMoney= $result->fields['Amount'];
-			///result값을 다음 레코드로 커서 이동 (커서 성공적으로 이동하면 함수는 true반환 이동이 eof로 전달되면 함수는 false 반환)
+			///다음 result 쿼리문 실행
             $result->MoveNext();
         }
 		///result결과값 출력

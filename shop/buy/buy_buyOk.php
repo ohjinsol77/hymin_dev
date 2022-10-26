@@ -1,19 +1,13 @@
 <?php
 include("../_inc/header.php");
 require("../adodb5/adodb.inc.php");
-
+///db연결
+include('../_inc/DBconnect.php');
 ini_set('display_errors', true);
 error_reporting(E_ALL);
+$trans_check = null;
+
 try {
-	$driver = 'mysqli';
-    $db = newAdoConnection($driver);
-    $db->debug = false;
-    $db->socket = '/var/run/mysqld/mysql_3306.sock';
-	///db 연결
-    $db->connect('localhost', 'root', 'Itemmania1324%^', 'study');
-    $trans_check = null;
-
-
     if(!$db){
         throw new Exception("데이터 연결오류",1);
     }
@@ -218,24 +212,31 @@ try {
             } else {                                      // 핸드폰이 총 금액보다 클 때
                 $mem_phone = $mem_phone - $sel_sum;
                 $recod_phone = $sel_sum;
+				$recod_buyPoint = 0;
                 $sel_sum = 0;
             }
         } else {                                          // 신용카드가 총 금액보다 클 때
             $mem_credit = $mem_credit - $sel_sum;
             $recod_credit = $sel_sum;
+			$recod_phone = 0;
+			$recod_buyPoint = 0;
             $sel_sum = 0;
         }
     } else {                                              // 현금이 총 금액보다 클 때
         $mem_cash = $mem_cash - $sel_sum;
         $recod_cash = $sel_sum;
-        $sel_sum = 0;
+		///변수 오류로 인해 카드,폰,총 사용포인트 값 지정
+		$recod_credit = 0;
+		$recod_phone = 0;
+		$recod_buyPoint = 0;
+		$sel_sum = 0;
     }
 
     echo "// 캐쉬 :" . $mem_cash;
     echo "// 카드:" . $mem_credit;
     echo "// 폰:" . $mem_phone;
     echo "// 구포:" . $mem_buyPoint;
-    echo "// 썸:" . $sel_sum . "<br/>" . "<br/>";
+    echo "// 썸:" . $mem_cash + $mem_credit + $mem_phone + $mem_buyPoint . "<br/>" . "<br/>";
 
 
     echo $recod_cash . "<br/>";
@@ -399,7 +400,7 @@ try {
 
         $perfect_list = " insert into trade_perfect_list set 
                           trade_id = '" . $order_num . "',
-                          trade_date= '" . date(Ymd) . "',
+                          trade_date= '" . date('Ymd') . "',
                           trade_type='trade',
                           seller_id = '" . $seller_id . "',
                           seller_name = '" . $seller_name . "',

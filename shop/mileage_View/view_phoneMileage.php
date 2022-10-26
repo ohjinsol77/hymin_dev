@@ -1,19 +1,11 @@
 <?php
 include("../_inc/header.php");
 require("../adodb5/adodb.inc.php");
+///DB연결 (db연결 include로 수정)
+include('../_inc/DBconnect.php');
 ini_set('display_errors', true);
 error_reporting(E_ALL);
-try {
-	$driver = 'mysqli';
-    $db = newAdoConnection($driver);
-    $db->debug = false;
-    $db->socket = '/var/run/mysqld/mysql_3306.sock';
-	///db 연결
-    $db->connect('localhost', 'root', 'Itemmania1324%^', 'study');
 
-    if(!$db){
-        throw new Exception("데이터 연결오류",1);
-    }
 
 $member_Num = $_SESSION['member_Session_number'];
 $font_color = "WHITE";
@@ -36,6 +28,7 @@ $font_color = "WHITE";
         $trans_check=$db->StartTrans();
 
         $rs = $db->Execute("select phone_regdate, phone_type, phone_price, phone_amount from phone_mileage where member_num=$member_Num order by phone_regdate desc limit 10 for update");
+try{
         if (!$rs) {
             throw new Exception("마일리지 조회 오류",039e39);
         }

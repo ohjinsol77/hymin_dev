@@ -1,18 +1,11 @@
 <?php
 include("../_inc/header.php");
 require("../adodb5/adodb.inc.php");
+///DB연결 (db연결 include로 수정)
+include('../_inc/DBconnect.php');
 ini_set('display_errors', true);
 error_reporting(E_ALL);
-try {
-	$driver = 'mysqli';
-    $db = newAdoConnection($driver);
-    $db->debug = false;
-    $db->socket = '/var/run/mysqld/mysql_3306.sock';
-	///db 연결
-    $db->connect('localhost', 'root', 'Itemmania1324%^', 'study');
-    if(!$db){
-        throw new Exception("데이터 연결오류",1);
-    }
+
 
 $mileage_id = $_SESSION['member_Session_mileage'];
 $font_color = "WHITE";
@@ -31,7 +24,7 @@ $font_color = "WHITE";
             <li id="thCol">잔액</li>
         </ul>
         <?php
-
+try{
         $trans_check=$db->StartTrans();
         $rs = $db->Execute("select buypoint_regdate, buypoint_type, buypoint_price from buypoint_log where mileage_id=$mileage_id and buypoint_type!=503 order by buypoint_regdate desc limit 10 for update ");
         if (!$rs) {

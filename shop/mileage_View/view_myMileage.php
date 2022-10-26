@@ -1,21 +1,12 @@
 <?php
 include("../_inc/header.php");
 include_once('../adodb5/adodb-pager.inc.php');
-
 include("../adodb5/adodb.inc.php");
+///DB연결 (db연결 include로 수정)
+include('../_inc/DBconnect.php');
 ini_set('display_errors', true);
 error_reporting(E_ALL);
-try {
-	$driver = 'mysqli';
-    $db = newAdoConnection($driver);
-    $db->debug = false;
-    $db->socket = '/var/run/mysqld/mysql_3306.sock';
-	///db 연결
-    $db->connect('localhost', 'root', 'Itemmania1324%^', 'study');
-    if(!$db){
 
-        throw new Exception("db연결 오류",1);
-    }
 
     $my_num = $_SESSION['member_Session_number'];
     $my_id = $_SESSION['member_Session_id'];
@@ -39,7 +30,7 @@ try {
 
 
         <?php
-
+try{
         //ADODB의 pager 기능 사용
         $pager = new ADODB_Pager($db, $sql);
         $pager->Render($rows_per_page = 15);

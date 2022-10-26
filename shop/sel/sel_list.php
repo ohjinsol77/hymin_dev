@@ -1,22 +1,14 @@
 <?php
-include("../_inc/header.php");
-
 ini_set('display_errors', true);
 error_reporting(E_ALL);
+
+include("../_inc/header.php");
 require("../adodb5/adodb.inc.php");
+///DB연결 (db연결 include로 수정)
 
+include('../_inc/DBconnect.php');
 
-try {
-	$driver = 'mysqli';
-    $db = newAdoConnection($driver);
-    $db->debug = false;
-    $db->socket = '/var/run/mysqld/mysql_3306.sock';
-	///db 연결
-    $db->connect('localhost', 'root', 'Itemmania1324%^', 'study');
-    $trans_check=null;
-
-
-
+$trans_check=null;
 $img_url = "";
 $num=1;
 ?>
@@ -39,8 +31,9 @@ $num=1;
     <?php
 
 
-    $rs = $db->Execute("select sel.sel_title, sel.sel_author, sel.sel_price, sel.sel_quantity, sel.sel_contents, img.image_url, sel.sel_id from sel sel join sel_image img on sel.sel_id = img.sel_id where sel.state=1  for update ");
+    $rs = $db->Execute("select sel.sel_title, sel.sel_author, sel.sel_price, sel.sel_quantity, sel.sel_contents, img.image_url, sel.sel_id from sel sel join sel_image img on sel.sel_id = img.sel_id where sel.sel_quantity>0  for update ");
 
+try{
     while (!$rs->EOF) {
 
             $sel_title = $rs->fields[0];
@@ -57,8 +50,8 @@ $num=1;
 
         $img_h = 30;                // height
 
+	
         $imgsize = GetImageSize($img_url);
-
         $img_width = $imgsize[0];       // 가로사이즈 선언
         $img_height = $imgsize[1];     // 세로사이즈 선언
 
@@ -114,7 +107,7 @@ $num=1;
 
             <form name="viewitem" method="post" action="sel_view.php">
                 <input type="hidden" name="sel_id" value="<?= $sel_id ?>"/>
-                <input type="hidden" naem="step" value="1"/>
+                <input type="hidden" name="step" value="1"/>
                 <input type="submit" value="제품 상세보기"/>
 
 

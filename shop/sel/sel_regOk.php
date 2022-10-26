@@ -1,19 +1,20 @@
 <?php
-include("../_inc/header.php");
-include ("../db/dbconn.php");
-ini_set('display_errors', true);
 error_reporting(E_ALL);
+ini_set("display_errors", 1);
+
+include("../_inc/header.php");
+///db연결
+include('../_inc/DBconnect.php');
+
+
+$trans_check=null;
 try {
-	$driver = 'mysqli';
-    $db = newAdoConnection($driver);
-    $db->debug = false;
-    $db->socket = '/var/run/mysqld/mysql_3306.sock';
-	///db 연결
-    $db->connect('localhost', 'root', 'Itemmania1324%^', 'study');
-        $trans_check=null;
-    if ($_SESSION['member_Session_admin'] != 1) {     // 등록 권한이 있는지 체크  회원 and 관리자
+	///regForm에서 admin을 제외한 회원 접근을 차단했기 때문에 여기서 차단을 안해도 될 것 같아서 삭제
+	/************************************************************************************
+	if ($_SESSION['member_Session_admin'] != 1) {     // 등록 권한이 있는지 체크  회원 and 관리자
         throw new Exception("물품을 등록할 권한이 없습니다.",4);
     }
+	*************************************************************************************/
 ?>
 <html>
 <body>
@@ -22,7 +23,6 @@ try {
 <div id="#contsRow">
 
     <?php
-
 
 
     if ($_FILES['strImg']['error'] == 4) {             // 이미지를 등록하지 않으면 list로 돌려보낸다.
@@ -84,7 +84,6 @@ try {
 
     $ext = strtolower($ext);            // 확장자 추출
 
-
     $tmp_file = explode(' ', microtime());
 
     $tmp_file[0] = substr($tmp_file[0], 2, 6);
@@ -126,11 +125,15 @@ try {
 
     }
     else {// 문제없음 .
+		
 
+		/****************************************************
+		image파일에서 게스트 쓰기 권한이 없어서 넘기지 못하는 오류 발생 -> chmod 707로변경하여 게스트에 읽기 쓰기 실행권한 부여
+		****************************************************/
         if (move_uploaded_file($_FILES["strImg"]["tmp_name"], $target_file)) {  // 임시파일을 실제 경로로 이동
 
             $real_name = $_FILES["strImg"]["name"];
-            $imgurl = "http://192.168.56.13/sel/image/" . $tmp_name;
+            $imgurl = "http://192.168.56.116/shop/sel/image/" . $tmp_name;
             $size = $_FILES["strImg"]["size"];
 
 
@@ -165,9 +168,7 @@ include("../_inc/footer.php");
 
 } catch (Exception $e) {
             $error_msg = '에러발생 : ' . $e->getMessage() . $e->getCode();
-            echo "<script>
-        alert(\" $error_msg \");
-        </script>";
+            echo "<script>alert(\" $error_msg \");</script>";
             echo("<script>location.href='../index.php';</script>");
 
             if (isset($db) && $db->IsConnected() == true) {

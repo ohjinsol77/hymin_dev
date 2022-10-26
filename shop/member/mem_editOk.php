@@ -1,8 +1,9 @@
 <?php
 //include("../db/dbconn.php");
 require("../adodb5/adodb.inc.php");
+///DB연결 (db연결 include로 수정)
+include('../_inc/DBconnect.php');
 error_reporting(E_ALL);
-
 ini_set("display_errors", 1);
 
 
@@ -14,17 +15,6 @@ $strAdd = $_POST['strAdd'];
 $member_num = $_SESSION['member_Session_number'];
 
 try {
-	$driver = 'mysqli';
-    $db = newAdoConnection($driver);
-    $db->debug = false;
-    $db->socket = '/var/run/mysqld/mysql_3306.sock';
-	///db 연결
-    $db->connect('localhost', 'root', 'Itemmania1324%^', 'study');
-	///db가 연결되지 않으면
-    if(!$db){
-		///예외처리
-        throw new Exception("db연결 오류");
-    }
 	///트랜잭션 시작
     $trans_check=$db->StartTrans();
 

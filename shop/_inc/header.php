@@ -1,9 +1,11 @@
 <?php
 
-
-
-//include('../css/style.css');
-$basepath = "http://localhost/";
+/********************************************
+admin 세션을 받을 수 없어서 세션 시작(sel_regform부분 연동)
+*********************************************/
+session_start();
+//include('./css/style.css');
+$basepath = "http://192.168.56.116/shop";
 $admin_checker = $_SESSION['member_Session_admin'];
 ?>
 
@@ -24,23 +26,23 @@ $admin_checker = $_SESSION['member_Session_admin'];
 <div id='header'>
     <div class="menubar">
         <ul>
-
-            <li><a href="<?php $basepath ?>/./index.php" id="current">Home</a></li>
+			
+            <li><a href="<?= $basepath ?>/index.php" id="current">Home</a></li>
             <li><a href="#" id="current">sell</a>
                 <ul>
 
-                    <li><a href="<?php $basepath ?>/sel/sel_list.php" id="current">sell_list</a></li>
-                    <li><a href="<?php $basepath ?>/sel/sel_regForm.php" id="current">sell_reg</a></li>
+                    <li><a href="<?= $basepath ?>/sel/sel_list.php" id="current">sell_list</a></li>
+                    <li><a href="<?= $basepath ?>/sel/sel_regForm.php" id="current">sell_reg</a></li>
                  </ul>
             </li>
 
             <li><a href="#" id="current">Mileage</a>
                 <ul>
 
-                    <li><a href="<?php $basepath ?>/mileage/mileage_charging.php" id="current">Charging</a></li>
-                    <li><a href="<?php $basepath ?>/mileage/mileage_PointChange.php"
+                    <li><a href="<?= $basepath ?>/mileage/mileage_charging.php" id="current">Charging</a></li>
+                    <li><a href="<?= $basepath ?>/mileage/mileage_PointChange.php"
                            id="current">buypoint->buymileage</a></li>
-                    <li><a href="<?php $basepath ?>/mileage/mileage_withdrawForm.php" id="current">withdraw</a></li>
+                    <li><a href="<?= $basepath ?>/mileage/mileage_withdrawForm.php" id="current">withdraw</a></li>
 
                 </ul>
 
@@ -59,10 +61,10 @@ $admin_checker = $_SESSION['member_Session_admin'];
                 ?>
                 <li><a href="#" id="current">admin page</a>
                     <ul>
-                        <li><a href="<?php $basepath ?>/admin/admin_userSearch.php" id="current">Edit Mileage</a></li>
-                        <li><a href="<?php $basepath ?>/admin/admin_listMile.php" id="current">Mileage List</a></li>
-                        <li><a href="<?php $basepath ?>/admin/admin_listSel.php" id="current">Sel List</a></li>
-                        <li><a href="<?php $basepath ?>/admin/admin_listUser.php" id="current">User List</a></li>
+                        <li><a href="<?= $basepath ?>/admin/admin_userSearch.php" id="current">Edit Mileage</a></li>
+                        <li><a href="<?= $basepath ?>/admin/admin_listMile.php" id="current">Mileage List</a></li>
+                        <li><a href="<?= $basepath ?>/admin/admin_listSel.php" id="current">Sel List</a></li>
+                        <li><a href="<?= $basepath ?>/admin/admin_listUser.php" id="current">User List</a></li>
 
 
                     </ul>
@@ -74,19 +76,20 @@ $admin_checker = $_SESSION['member_Session_admin'];
 
 
             <?php
+		
+            if (isset($_SESSION['member_Session_id'])) {
+							?>
+			
+				
+                <li><a href="<?= $basepath ?>/member/mem_logout.php" id="current">logout</a></li>
 
-            if (isset($_SESSION['member_Session_id'])) { ?>
-
-
-                <li><a href="<?php $basepath ?>/member/mem_logout.php" id="current">logout</a></li>
-
-                <li><a href="<?php $basepath ?>/mileage_View/view_myMileage.php"
+                <li><a href="<?= $basepath ?>/mileage_View/view_myMileage.php"
                        id="current"><?php echo $_SESSION['member_Session_id']; ?>님 접속중</a></li>
 
                 <?php
-            } else { ?>
-                <li><a href="<?php $basepath ?>/member/mem_login.php" id="current">login</a></li>
-                <li><a href="<?php $basepath ?>/member/mem_regForm.php" id="current">register</a></li>
+            }else { ?>
+                <li><a href="<?= $basepath ?>/member/mem_login.php" id="current">login</a></li>
+                <li><a href="<?= $basepath ?>/member/mem_regForm.php" id="current">register</a></li>
 
             <?php } ?>
 
