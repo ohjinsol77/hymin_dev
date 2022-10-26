@@ -5,8 +5,10 @@ ini_set('display_errors', true);
 error_reporting(E_ALL);
 $driver = 'mysqli';
 $db = newAdoConnection($driver);
-$db->debug = true;
-$db->connect('localhost','root','Kdkdldpadkdl123$%^','study');
+$db->debug = false;
+$db->socket = '/var/run/mysqld/mysql_3306.sock';
+///db 연결
+$db->connect('localhost', 'root', 'Itemmania1324%^', 'study');
 $img_url="";
 
 

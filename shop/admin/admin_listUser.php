@@ -9,13 +9,14 @@ require('../adodb5/adodb.inc.php');
 <hr width="80%"/>
 <div>
 
-    <?php
-        try {
-        $driver = 'mysqli';
-        $db = newAdoConnection($driver);
-        $db->debug = false;
-
-        $db->connect('localhost', 'root', 'Kdkdldpadkdl123$%^', 'study');
+<?php
+try {
+	$driver = 'mysqli';
+    $db = newAdoConnection($driver);
+    $db->debug = false;
+    $db->socket = '/var/run/mysqld/mysql_3306.sock';
+	///db 연결
+    $db->connect('localhost', 'root', 'Itemmania1324%^', 'study');
     } catch (Exception $e) {
         die($e->getMessage());   // 에러메세지 출력
     }

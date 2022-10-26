@@ -4,26 +4,28 @@ require("../adodb5/adodb.inc.php");
 ini_set('display_errors', true);
 error_reporting(E_ALL);
 try {
-    $driver = 'mysqli';
+	$driver = 'mysqli';
     $db = newAdoConnection($driver);
-    $db->debug = true;
-
-    $db->connect('localhost', 'root', 'Kdkdldpadkdl123$%^', 'study');
+    $db->debug = false;
+    $db->socket = '/var/run/mysqld/mysql_3306.sock';
+	///db 연결
+    $db->connect('localhost', 'root', 'Itemmania1324%^', 'study');
 
     if(!$db){
         throw new Exception("db연결 오류",1);
     }
 
 $member_Num = $_SESSION['member_Session_number'];
+/// 'white'
 $font_color = "WHITE";
 ?>
     <html>
     <body>
     <h2>구매 마일리지 상세정보</h2>
-
+	<!--'80%'-->
     <hr width="80%"/>
     <div>
-
+		<!--큰 따옴표 -> 작은따옴표로 변경-->
         <ul id="headerRow">
             <li id="thCol">발생일</li>
             <li id="thCol">타입</li>
@@ -33,8 +35,12 @@ $font_color = "WHITE";
         <?php
 
         $trans_check=$db->StartTrans();
+
+		///'select buymileage_regdate, buymileage_type, buymileage_price, buymileage_amount from buy_mileage where member_num=' . $member_Num . ' order by buymileage_regdate desc limit 10 for update'
+
         $rs = $db->Execute("select buymileage_regdate, buymileage_type, buymileage_price, buymileage_amount from buy_mileage where member_num=$member_Num order by buymileage_regdate desc limit 10 for update");
         if (!$rs) {
+			///'마일리지 조회 오류'
             throw new Exception("마일리지 조회 오류",31);
         }
         while (!$rs->EOF) {
@@ -45,6 +51,7 @@ $font_color = "WHITE";
 
             $rs->MoveNext();
 
+			/// 큰 따옴표 -> 작은 따옴표 변경
             switch ($member_type) {
                 case 400:
                     $member_type = "(+)구매마일리지충전";
@@ -72,6 +79,7 @@ $font_color = "WHITE";
                     break;
 
                 default:
+					/// '-'
                     echo "-";
                     break;
             }

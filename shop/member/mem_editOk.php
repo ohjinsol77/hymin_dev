@@ -14,11 +14,12 @@ $strAdd = $_POST['strAdd'];
 $member_num = $_SESSION['member_Session_number'];
 
 try {
-    $driver = 'mysqli';
+	$driver = 'mysqli';
     $db = newAdoConnection($driver);
-    $db->debug = true;
+    $db->debug = false;
+    $db->socket = '/var/run/mysqld/mysql_3306.sock';
 	///db 연결
-    $db->connect('localhost', 'root', 'Kdkdldpadkdl123$%^', 'study');
+    $db->connect('localhost', 'root', 'Itemmania1324%^', 'study');
 	///db가 연결되지 않으면
     if(!$db){
 		///예외처리

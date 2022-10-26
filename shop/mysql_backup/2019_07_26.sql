@@ -896,7 +896,7 @@ CREATE TABLE `sel_image` (
 
 LOCK TABLES `sel_image` WRITE;
 /*!40000 ALTER TABLE `sel_image` DISABLE KEYS */;
-INSERT INTO `sel_image` VALUES (51,'boots1.png','http://192.168.56.13/sel/image/1553761435123709.png',11196,9),(52,'shoe2.png','http://192.168.56.13/sel/image/1553761453893834.png',13053,10),(53,'8.png','http://192.168.56.13/sel/image/1553761472453063.png',16092,11),(54,'high-heel.png','http://192.168.56.13/sel/image/1553761488220295.png',10683,12),(55,'booty66.png','http://192.168.56.13/sel/image/1553761509790169.png',29775,13),(56,'5555.png','http://192.168.56.13/sel/image/1553761523904375.png',20415,14),(57,'shoes1.png','http://192.168.56.13/sel/image/1554106208575047.png',20831,15);
+INSERT INTO `sel_image` VALUES (51,'boots1.png','http://192.168.56.116/shop/sel/image/1553761435123709.png',11196,9),(52,'shoe2.png','http://192.168.56.13116/shop/sel/image/1553761453893834.png',13053,10),(53,'8.png','http://192.168.56.116/shop/sel/image/1553761472453063.png',16092,11),(54,'high-heel.png','http://192.168.56.116/shop/sel/image/1553761488220295.png',10683,12),(55,'booty66.png','http://192.168.56.116/shop/sel/image/1553761509790169.png',29775,13),(56,'5555.png','http://192.168.56.116/shop/sel/image/1553761523904375.png',20415,14),(57,'shoes1.png','http://192.168.56.116/shop/sel/image/1554106208575047.png',20831,15);
 /*!40000 ALTER TABLE `sel_image` ENABLE KEYS */;
 UNLOCK TABLES;
 

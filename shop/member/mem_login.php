@@ -1,7 +1,6 @@
 <?php
-include("../_inc/header.php");
-require("../adodb5/adodb.inc.php");
-
+include('../_inc/header.php');
+require('../adodb5/adodb.inc.php');
 ?>
 
 <html>
@@ -16,15 +15,16 @@ require("../adodb5/adodb.inc.php");
 
 
             <?php
-
+			
             /***************세션체크***************/
 			///member_Session_id가 존재하면
+
 			if (isset($_SESSION['member_Session_id'])) {
 				/// member_Session_id정보와 세션살음 출력
                 echo $_SESSION['member_Session_id'] . '세션살음';
 				///아니라면 세션 죽음이 출력
             } else {
-                echo "세션 죽음";
+                echo "세션죽음";
             }
             /***************세션체크***************/
 			///만약 member_Session_id가 존재하면

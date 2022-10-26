@@ -7,10 +7,12 @@ require("../adodb5/adodb.inc.php");
 
 
 try {
-    $driver = 'mysqli';
+	$driver = 'mysqli';
     $db = newAdoConnection($driver);
     $db->debug = false;
-    $db->connect('localhost', 'root', 'Kdkdldpadkdl123$%^', 'study');
+    $db->socket = '/var/run/mysqld/mysql_3306.sock';
+	///db 연결
+    $db->connect('localhost', 'root', 'Itemmania1324%^', 'study');
     $trans_check=null;
 
 

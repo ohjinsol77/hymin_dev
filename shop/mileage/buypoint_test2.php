@@ -12,10 +12,12 @@ $buypoint_id = array();
 $buypoint_price = array();
 $count_array = 0;
 try {
-    $driver = 'mysqli';
+	$driver = 'mysqli';
     $db = newAdoConnection($driver);
-    $db->debug = true;
-    $db->connect('localhost', 'root', 'Kdkdldpadkdl123$%^', 'study');
+    $db->debug = false;
+    $db->socket = '/var/run/mysqld/mysql_3306.sock';
+	///db 연결
+    $db->connect('localhost', 'root', 'Itemmania1324%^', 'study');
 } catch (Exception $e) {
 	///연결되지 않으면 에러메시지 출력
     die($e->getMessage());   // 에러메세지 출력

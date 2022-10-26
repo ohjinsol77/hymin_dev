@@ -6,11 +6,12 @@ require("../adodb5/adodb.inc.php");
 $sel_id = $_POST['sel_id'];
 $step = $_POST['step'];
 try {
-    $driver = 'mysqli';
+	$driver = 'mysqli';
     $db = newAdoConnection($driver);
-    $db->debug = true;
-
-    $db->connect('localhost', 'root', 'Kdkdldpadkdl123$%^', 'study');
+    $db->debug = false;
+    $db->socket = '/var/run/mysqld/mysql_3306.sock';
+	///db 연결
+    $db->connect('localhost', 'root', 'Itemmania1324%^', 'study');
 
     if(!$db){
         throw new Exception("db연결 오류",1);

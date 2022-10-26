@@ -28,8 +28,11 @@ if ($_SESSION['member_Session_admin'] == 1) {     // 등록 권한이 있는지 
                                                              name="nQuantity" class="nQuantity"/></li>
                 <br/>
 
-                <li style="list-style-type:squrae"><label for="strConts">내용</label>
-                    <textarea name="strConts" cols="5" rows="10"></textarea></li>
+				<!--원래 코드 숫자4 및 textarea 위치변경
+			    <li style="list-style-type:squrae"><label for="strConts">내용</label>
+                <textarea name="strConts" cols="5" rows="10"></textarea></li> -->
+				<li><label for="strConts">내용</label></li> <textarea name="strConts" cols="5" rows="10"></textarea>
+
                 <br/>
 
                 <li><label for="strImg">이미지 추가</label>

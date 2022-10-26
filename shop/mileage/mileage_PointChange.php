@@ -16,10 +16,12 @@ ini_set('display_errors', true);
 error_reporting(E_ALL);
 try {
 	///DB와 연결
-    $driver = 'mysqli';
+	$driver = 'mysqli';
     $db = newAdoConnection($driver);
-    $db->debug = true;
-    $db->connect('localhost', 'root', 'Kdkdldpadkdl123$%^', 'study');
+    $db->debug = false;
+    $db->socket = '/var/run/mysqld/mysql_3306.sock';
+	///db 연결
+    $db->connect('localhost', 'root', 'Itemmania1324%^', 'study');
     ///만약 db가 연결되지 않으면
 	if(!$db){
 		///예외처리

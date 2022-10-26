@@ -1,5 +1,4 @@
 <?php
-
 include("../_inc/header.php");
 require("../adodb5/adodb.inc.php");
 error_reporting(E_ALL);
@@ -16,12 +15,16 @@ ini_set("display_errors", 1);
     $nMember_number = 0;
     $nMember_admin = 0;
 
-    try {
-        $driver = 'mysqli';
-        $db = newAdoConnection($driver);
-        $db->debug = true;
-		///db 연결
-        $db->connect('localhost', 'root', 'Kdkdldpadkdl123$%^', 'study');
+
+
+try {
+		$driver = 'mysqli';
+    $db = newAdoConnection($driver);
+    $db->debug = false;
+    $db->socket = '/var/run/mysqld/mysql_3306.sock';
+	///db 연결
+    $db->connect('localhost', 'root', 'Itemmania1324%^', 'study');
+
 		///만약 db연결이 안되면
         if(!$db){
 			///예외처리
@@ -53,13 +56,13 @@ ini_set("display_errors", 1);
             $rs->MoveNext();
         }
     }
-    print_r($_SESSION);
+
 
     /***************세션체크***************/
 	///만약 member_Session_id가 존재한다면
     if (isset($_SESSION['member_Session_id'])) {
 		///아이디와 살았음 출력
-        echo $_SESSION['member_Session_id'] . '살았음';
+        echo $_SESSION['member_Session_id'] . '살았음1';
 	///아니면
     } else {
 		///죽음 출력
@@ -80,7 +83,7 @@ if (isset($_SESSION['member_Session_id'])){
 ///member_Session_mileage를 변수에 대입
 $user_Mileage=$_SESSION['member_Session_mileage'];
 /// call check_delDate($user_Mileage) 실행
-$db->Execute("call check_delDate($user_Mileage)");
+//$db->Execute("call check_delDate($user_Mileage)");
 ///만약 db가 연결되지 않으면
 if(!$db){
 	///예외처리

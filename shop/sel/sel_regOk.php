@@ -3,13 +3,14 @@ include("../_inc/header.php");
 include ("../db/dbconn.php");
 ini_set('display_errors', true);
 error_reporting(E_ALL);
-    try {
-        $driver = 'mysqli';
-        $db = newAdoConnection($driver);
-        $db->debug = false;
-        $db->connect('localhost', 'root', 'Kdkdldpadkdl123$%^', 'study');
+try {
+	$driver = 'mysqli';
+    $db = newAdoConnection($driver);
+    $db->debug = false;
+    $db->socket = '/var/run/mysqld/mysql_3306.sock';
+	///db 연결
+    $db->connect('localhost', 'root', 'Itemmania1324%^', 'study');
         $trans_check=null;
-
     if ($_SESSION['member_Session_admin'] != 1) {     // 등록 권한이 있는지 체크  회원 and 관리자
         throw new Exception("물품을 등록할 권한이 없습니다.",4);
     }
@@ -60,6 +61,7 @@ error_reporting(E_ALL);
 
     $rs = $db->Execute("insert into sel(sel_title, sel_author, sel_price, sel_quantity, sel_contents, sel_regdate, sel_editdate) values ('$strTitle','$strAuthor', $nPrice, $nQuantity,'$strConts',now(),now())");
 
+	
 
     $sel_num = $db->Insert_ID();        // 상품등록을 하면 auto_increment 값(sel_num)을 저장
 

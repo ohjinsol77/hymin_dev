@@ -6,10 +6,12 @@ require("../adodb5/adodb.inc.php");
 ini_set('display_errors', true);
 error_reporting(E_ALL);
 try {
-    $driver = 'mysqli';
+	$driver = 'mysqli';
     $db = newAdoConnection($driver);
     $db->debug = false;
-    $db->connect('localhost', 'root', 'Kdkdldpadkdl123$%^', 'study');
+    $db->socket = '/var/run/mysqld/mysql_3306.sock';
+	///db 연결
+    $db->connect('localhost', 'root', 'Itemmania1324%^', 'study');
     $trans_check=null;
     if(!$db){
         throw new Exception("데이터 연결오류",1);
