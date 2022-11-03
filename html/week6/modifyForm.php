@@ -3,31 +3,43 @@ error_reporting( E_ALL );
 ini_set( "display_errors", 1 );
 include('function.php');
 try{
-	if(empty($_POST['pw'])){
+	if(!isset($_POST['pw']) || empty($_POST['pw'])){
 		throw new exception('비밀번호 넘어오지 않음');
 	}
 
 	#비밀번호 오류 확인 쿼리 시작
 	$strPost = $_POST['pw'];
 	$nNumber = $_GET['number'];
-
-	$qryPw = "select pw from board 
-			  where number = " . $nNumber . ";
-			 ";
+	$qryPw = "
+		select pw from board 
+		 where number = " . $nNumber . ";
+	";
 	$rstPw = mysqli_query($Conn, $qryPw);		//쿼리 실행
-	$rgPw = $rstPw->fetch_array();					//비밀번호 조회
+	
+	if(mysqli_num_rows($rstPw) < 1){
+		throw new exception('비밀번호 조회 오류.');
+	}
 
-	//비밀번호 오류시 예외처리
+	$rgPw = mysqli_fetch_array($rstPw);					//비밀번호 조회
+
+	#비밀번호 오류시 예외처리
 	if($strPost !== $rgPw["pw"]){
 		throw new exception('비밀번호 오류111');
 	}
 
-	#수정 항목 입력 쿼리
-	$qrySelect = "select * from board 
-				  where number = " . $nNumber . ";
-				  ";
+	#수정하기 전 본문 불러오기
+	$qrySelect = "
+		select * from board 
+		 where number = " . $nNumber . ";
+	";
+
 	$rstSelect = mysqli_query($Conn, $qrySelect);
-	$rgBoard = $rstSelect->fetch_array();
+	
+	if(mysqli_num_rows($rstPw) < 1){
+		throw new exception('본문 조회 오류.');
+	}
+
+	$rgBoard = mysqli_fetch_array($rstSelect);
 	$strTitle = $rgBoard['title'];
 	$strTitle = $rgBoard['text'];
 	$strTitle = $rgBoard['writer'];
@@ -62,18 +74,15 @@ try{
 
 <?php
 }catch(exception $e){
-    $error= '에러발생 : ' . $e->getMessage();
+	$error= '에러발생 : ' . $e->getMessage();
 	echo "<script>alert(\" $error \");</script>";
     echo ("<script>location.href='boardlist.php'</script>");
 
 	if($Conn){
-		if($bTrans_check == true){
-			$Cclassdb->fnRollback();
-			$Cclassdb->fnCommit();
-			unset($bTrans_check);
-		}
+		mysqli_close($Conn);
+		unset($Conn);
 	}
-	mysqli_close($Conn);
-}
 
+	exit;
+}
 ?>

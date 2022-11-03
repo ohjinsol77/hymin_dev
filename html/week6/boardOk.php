@@ -3,46 +3,23 @@ error_reporting( E_ALL );
 ini_set( "display_errors", 1 );
 include('function.php');
 try{
-	if(!isset($_POST['writer'])){
-		echo "<script>alert(\"익명 작성하세요.\");</script>";
-		echo("<script>location.href='boardForm.php';</script>");
-		exit;
+	#post 확인
+	foreach($_POST as $key=>$value){
+		if(!isset($_POST[$key]) || empty($_POST[$key])){
+			echo "<script>alert(\"빈칸이거나 포스트값이 없습니다..\");</script>";
+			echo("<script>location.href='boardForm.php';</script>");
+			exit;
+		}	
 	}
-
+	
 	$strTitle = $_POST["title"];
-	$strText = $_POST["text"];			//내용
-	$strWriter = $_POST["writer"];		//익명작성자
-	$strPw = $_POST["pw"];
-	$dtDateTime = 'now()';				//작성시간
-	$bTrans_check = true;
+	$strText = $_POST["text"];			#내용
+	$strWriter = $_POST["writer"];		#익명작성자
+	$strPw = $_POST["pw"];				#비밀번호
+	$dtDateTime = 'now()';				#작성시간
+	$bTrans_check = true;				#트랜잭션 체커
 
-	////foreach로 바꿀 예정 POST문
-	if(empty($_POST['writer'])){
-		echo "<script>alert(\"익명 작성하세요.\");</script>";
-		echo("<script>location.href='boardForm.php';</script>");
-		exit;
-	}
-
-	if(empty($_POST['pw'])){
-		   echo "<script>alert(\"비밀번호 체크하세요.\");</script>";
-		echo("<script>location.href='boardForm.php';</script>");
-		exit;
-	}
-
-	if(empty($_POST['title'])){
-		echo "<script>alert(\"제목 체크하세요.\");</script>";
-		echo("<script>location.href='boardForm.php';</script>");
-		exit;
-	}
-
-	if(empty($_POST['text'])){
-		echo "<script>alert(\"내용 체크하세요.\");</script>";
-		echo("<script>location.href='boardForm.php';</script>");
-		exit;
-	}
-
-
-	/********테이블 정보***************
+	/******************************************테이블 정보******************************************
 	CREATE TABLE `board` (
 	`number` int unsigned NOT NULL AUTO_INCREMENT,
 	`title` varchar(100) NOT NULL,
@@ -54,31 +31,38 @@ try{
     `modify` datetime DEFAULT NULL,
     PRIMARY KEY (`number`)
 	) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
-	*****************/
+	******************************************************************************************/
 
-	///쿼리문
+	#쿼리문
 	$qryInsert = "
-				 Insert into board(title, text, date, writer, pw) values
-				 (\"$strTitle\",\"$strText\",$dtDateTime,\"$strWriter\",\"$strPw\");
-				 ";
-
-
+		Insert into board(title, text, date, writer, pw) values
+		 (\"$strTitle\",\"$strText\",$dtDateTime,\"$strWriter\",\"$strPw\");
+	";
+	$bTrans_check = $Classdb->fnStart_trans();
 	$rstInsert = mysqli_query($Conn,$qryInsert);
+
 	if(mysqli_affected_rows($Conn) < 1){
 		throw new exception('데이터 입력 오류');
 	}
 
-	///커밋
-
-
+	$Classdb->fnCommit();
 	echo "<script>alert(\"글 작성 완료\");</script>";
 	echo("<script>location.href='./boardlist.php';</script>");
 
+}catch(exception $e){
+	$error= '에러발생 : ' . $e->getMessage();
+	echo "<script>alert(\" $error \");</script>";
+    echo ("<script>location.href='boardlist.php'</script>");
 
-
-
-}catch(Exception $e){
-	echo $e->getMessage()."<br>";
-
+	if($Conn){
+		if($bTrans_check == true){
+			$Classdb->fnRollback();
+			$Classdb->fnCommit();
+			unset($bTrans_check);
+		}
+		mysqli_close($Conn);
+		unset($Conn);
+	}
+	exit;
 }
 ?>

@@ -22,33 +22,36 @@ try{
 	$strWriter = $_POST['writer'];
 	$strText = $_POST['text'];
 	$dtModify = "now()";
-	$qryUpdate = "update board set title = \"$strTitle\", writer = \"$strWriter\", text = \"$strText\", modify = $dtModify 
-				  where number = $nNumber;
+	$bTrans_check = true;
+	$qryUpdate = "
+				 update board set title = \"$strTitle\", writer = \"$strWriter\", text = \"$strText\", modify = $dtModify 
+				 where number = $nNumber;
 				 ";
-
-	$Cclassdb->fnStarttrans();
+	$bTrans_check = $Classdb->fnStarttrans();
+	if($bTrans_check !== true){
+		throw new exception('트랜잭션 시작 오류');
 
 	$rstUpdate = mysqli_query($Conn, $qryUpdate);
-	
-	if(mysqli_affected_rows($Conn) < 1){
+	if(mysqli_affected_rows($rstUpdate) < 1){
 		throw new exception('수정 오류');
 	}
-	
-	#read창으로 이동
+
+	$Classdb->fnCommit();		
 	echo "<script>location.href = './read.php? number= " . $nNumber . "'</script>";
-	
-	$Cclassdb->fnCommit();
 }catch(exception $e){
 	$error= '에러발생 : ' . $e->getMessage();
 	echo "<script>alert(\" $error \");</script>";
     echo ("<script>location.href='boardlist.php'</script>");
-
 	if($Conn){
 		if($bTrans_check == true){
-			$Cclassdb->fnRollback();
-			$Cclassdb->fnCommit();
+			$Classdb->fnRollback();
+			$Classdb->fnCommit();
+			unset($bTrans_check);
 		}
+
+		mysqli_close($Conn);
+		unset($Conn);
 	}
-	mysqli_close($Conn);
+	exit;
 }
 ?>

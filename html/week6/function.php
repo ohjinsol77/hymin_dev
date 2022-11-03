@@ -31,7 +31,7 @@ class database{
 		}
 	}
 	
-	public function fnStarttrans(){
+	public function fnStart_trans(){
 		if(!mysqli_query($this -> db, 'set autocommit = 0') || !mysqli_query($this -> db, 'start transaction')) {
 			return false;
 		}else{
@@ -41,11 +41,17 @@ class database{
 
 }
 
-$Cclassdb = new database;
-$Conn = $Cclassdb->db;
+$Classdb = new database;
+$Conn = $Classdb->db;
 
+try{
+	if(!$Conn){
+		throw new exception('데이터베이스 연결 실패');
+	}
 
-
+}catch(exception $e){
+	echo $e->getMessage();
+}
 
 
 
