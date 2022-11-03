@@ -6,16 +6,33 @@ include('dbConn.php');
 <html>
 <body>
 <?php
-	$number = $_GET['number'];
-	$qrySelect = "select * from board where number = " .$number. ";";
-	$rstView = mysqli_fetch_array(mysqli_query($CMaster,$qrySelect));
-	$rstView = $rstView['view'] + 1;
-	$qryUpdate = "update board set view = " . $rstView . " where number = " . $number . ";";
+try{
+	$nNumber = $_GET['number'];
+	$qryView = "select * from board 
+				where number = " . $nNumber . ";
+			   ";
+	$rstView = mysqli_query($CMaster,$qryView);
+	$rgView = mysqli_fetch_array($rstView);
+
+	if(mysqli_num_rows($rstView) < 1){
+		throw new exception('조회결과 없음');
+	}
+
+	$rgView = $rgView['view'] + 1;
+	$qryUpdate = "update board set view = " . $rgView . 
+				 " where number = " . $nNumber . ";
+				 ";
 	$rstUpdate = mysqli_query($CMaster,$qryUpdate);
-	$qrySelectv = "select * from board where number = " . $number . ";";
+	if(mysqli_affected_rows($CMaster) < 1){
+		throw new exception('조회수 업데이트 결과 없음');
+	}
+
+	$qrySelectv = "select * from board 
+				   where number = " . $nNumber . ";
+				  ";
+
 	$rstSelectv = mysqli_query($CMaster,$qrySelectv);
 	$rgBoard = $rstSelectv->fetch_array();
-
 
 ?>
 
@@ -32,22 +49,28 @@ include('dbConn.php');
 		<div id = "bo content">
 			<!--텍스트 내용 가져오기-->
 			<?= nl2br("$rgBoard[text]"); ?>
-
 		</div>
-
 		<div id = "bo delete">
 			<ul>
-				<form action = "./modifyForm.php? number=<?php echo $rgBoard['number']; ?>" method = "post">
+				<input type = "button" value = "홈으로 돌아가기" 
+					   onclick = "window.location='./boardlist.php'" >
+				<form action = "./modifyPwcheck.php? number=<?php echo $nNumber; ?>" method = "post">
 					<input type = "submit" value="수정하기">
 				</form>
-				<form action = "./delete.php? number=<?php echo $rgBoard['number']; ?>" method = "post">
-					<input type = "hidden" name = "pw" value="<?=$rgBoard['pw']?>">
+				<form action = "./deletePwcheck.php? number=<?php echo $nNumber; ?>" method = "post">
 					<input type = "submit" value="삭제하기">
 				</form>
 			</ul>
-
-			
 		</div>
 </div>
 </body>
 </html>
+<?php
+}catch(exception $e){
+	echo $e->getMessage();
+}	
+
+?>
+<!--
+<input type = "hidden" name = "pw" value="<?=$rgBoard['pw']?>">
+-->

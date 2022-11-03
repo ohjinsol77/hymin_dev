@@ -27,18 +27,16 @@ include('dbConn.php');
       </thead>
 
         <?php
+		$qrySelect = "select * from board order by number limit 0,10";
+        $rstSelect = mysqli_query($CMaster,$qrySelect); 
 
-		  $qrySelect = "select * from board order by number limit 0,10";
-          $rstSelect = mysqli_query($CMaster,$qrySelect); 
-            while($board = $rstSelect->fetch_array())
-            {
-              //title변수에 DB에서 가져온 title을 선택
-              $title=$board["title"]; 
-              if(strlen($title)>30)
-              { 
-                //title이 30을 넘어서면 ...표시
+		while($board = $rstSelect->fetch_array()){
+            //title변수에 DB에서 가져온 title을 선택
+            $title=$board["title"]; 
+            if(strlen($title)>30){ 
+				//title이 30을 넘어서면 ...표시
                 $title=str_replace($board["title"],mb_substr($board["title"],0,30,"utf-8")."...",$board["title"]);
-              }
+			}
         ?>
       <tbody>
         <tr>
