@@ -1,4 +1,4 @@
-	<?php
+<?php
 error_reporting( E_ALL );
 ini_set( "display_errors", 1 );
 
@@ -41,21 +41,10 @@ class database{
 
 }
 
-$Classdb = new database;
-$Conn = $Classdb->db;
+function fnAlert($strAlert) {
+	$strAlrt = "<script>alert(\"$strAlert\");</script>";
+	$strAlrt .= ("<script>location.href='./boardlist.php';</script>");
 
-try{
-	if(!$Conn){
-		throw new exception('데이터베이스 연결 실패');
-	}
-
-}catch(exception $e){
-	echo $e->getMessage();
+	echo $strAlrt;
 }
-
-
-
-
 ?>
-
-
