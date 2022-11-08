@@ -2,6 +2,9 @@
 error_reporting( E_ALL );
 ini_set( "display_errors", 1 );
 
+
+
+/* mysqli 쿼리로 바로 실행시키는건 부적합 -> 교체해야함 */
 class database{
 	private $strHost = 'localhost';
 	private $strId = 'root';
@@ -41,9 +44,9 @@ class database{
 
 }
 
-function fnAlert($strAlert) {
+function fnAlert($strAlert , $strLocation) {
 	$strAlrt = "<script>alert(\"$strAlert\");</script>";
-	//$strAlrt .= ("<script>location.href='./joinForm.php';</script>");
+	$strAlrt .= ("<script>location.href='./$strLocation';</script>");
 
 	echo $strAlrt;
 }

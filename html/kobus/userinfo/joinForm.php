@@ -11,7 +11,10 @@
 				여<input type = 'radio' name = 'gender' value = '2'></li>
 
 			<li><input type = 'submit' value = '가입하기'>
-				<input type = 'reset' value = '다시 작성하기'></li>
+				<input type = 'reset' value = '다시 작성하기'>
+				<input type = 'button' value = '홈으로 돌아가기' onclick = "window.location= '../userinfo/mainPage.php'">
+			</li>
+
 		</form>
 	</body>
 </html>
