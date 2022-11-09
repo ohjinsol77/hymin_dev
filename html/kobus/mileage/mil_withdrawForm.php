@@ -21,10 +21,7 @@ try {
 	}
 	exit;
 }
-	
-
 ?>
-
 <html>
 	<h2 align = 'center'>마일리지 출금 폼</h2>
 	<body align = 'center'>

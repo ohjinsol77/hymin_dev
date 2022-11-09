@@ -8,7 +8,6 @@ try {
 		throw new exception('세션값 오류');
 	}
 
-	
 } catch(exception $e) {
 	$strAlert= '에러발생 : ' . $e->getMessage();
 	$strLocation = 'loginForm.php';
@@ -20,7 +19,7 @@ try {
 	<body align = 'center'>
 		<h1>로그인 폼</h1>
 		<form name = 'memoutForm' method = 'post' action = 'memoutOk.php'>
-			<li>비밀번호 : <input type = 'password' name = 'pw'autofocus/></li>
+			<li>비밀번호 : <input type = 'password' name = 'userpw'autofocus/></li>
 			<li>전화번호 : <input type = 'number' name = 'mobile'/></li>
 			<li>생년월일 : <input type = 'number' name = 'birthday'/></li>
 			<p>

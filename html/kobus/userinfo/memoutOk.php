@@ -4,28 +4,29 @@ ini_set( "display_errors", 1 );
 include('../function/function.php');
 session_start();
 try {
+	/* 포스트 및 세션 값 검사 */ 
 	if(!isset($_SESSION['userid'])) {
 		throw new exception('세션값 오류');
+	}
+              
+	if (!isset($_POST['userpw']) & empty($_POST['userpw'])) {
+		throw new exception('p값 오류');
+	}
+
+	if (!isset($_POST['mobile']) & empty($_POST['mobile'])) {
+		throw new exception('p값 오류');
+	}
+	if (!isset($_POST['birthday']) & empty($_POST['birthday'])) {
+		throw new exception('p값 오류');
 	}
 
 	/* 변수 초기화 */
 	$strUserid = $_SESSION['userid'];
-	$strUserpw = $_POST['pw'];
+	$strUserpw = $_POST['userpw'];
 	$strMobile = $_POST['mobile'];
 	$strBirthday = $_POST['birthday'];
 	$bTrans_check = true;
 	
-	/* 포스트 값 검사 */               
-	if (!isset($strUserpw) & empty($strUserpw)) {
-		throw new exception('p값 오류');
-	}
-
-	if (!isset($strMobile) & empty($strMobile)) {
-		throw new exception('p값 오류');
-	}
-	if (!isset($strBirthday) & empty($strBirthday)) {
-		throw new exception('p값 오류');
-	}
 
 	$Classdb = new database;
 	$Conn = $Classdb->db;
@@ -34,9 +35,9 @@ try {
 	}
 
 	$qrySelect = "
-		SELECT id, pw, mobile, birthday 
+		SELECT userid, userpw, mobile, birthday 
 		  FROM userinfo 
-		 WHERE id = " . $strUserid . " and " . $strUserpw . " and " . $strMobile . " and " . $strBirthday . "
+		 WHERE userid = '" . $strUserid . "' and userpw = '" . $strUserpw . "' and mobile =  " . $strMobile . " and birthday = " . $strBirthday . "
 	";
 	$rstSelect = mysqli_query($Conn, $qrySelect);
 	if (!$rstSelect) {
@@ -47,16 +48,16 @@ try {
 		throw new exception('회원 조회 오류.');
 	}
 
-	$qryInsert = "
-		INSERT INTO deluserinfo 
-		  SELECT * 
-		 FROM userinfo where id = " . $strUserid . "
-	";
 	$bTrans_check = $Classdb->fnStart_trans();
-	if($bTrans_check !== true){
+	if($bTrans_check === false){
 		throw new exception('트랜잭션 실패');
 	}
 
+	$qryInsert = "
+		INSERT INTO deluserinfo 
+		  SELECT * 
+		 FROM userinfo where userid = '" . $strUserid . "'
+	";
 	$rstInsert = mysqli_query($Conn,$qryInsert);
 	if (!$rstInsert) {
 		throw new exception('회원 삭제 정보 입력 오류1');
@@ -64,11 +65,10 @@ try {
 	if (mysqli_affected_rows($Conn) < 1) {
 		throw new exception('회원 삭제 정보 입력 오류2');
 	}
-
-
+	
 	$qryDelete = "
 		DELETE FROM userinfo 
-		 WHERE id = " . $strUserid . "
+		 WHERE userid = '" . $strUserid . "'
 	";
 	$rstDelete = mysqli_query($Conn,$qryDelete);
 	if (!$rstDelete) {
@@ -80,6 +80,7 @@ try {
 	}
 	
 	$Classdb->fnCommit();
+	session_destroy();
 
 	$strAlert = '탈퇴완료.';
 	$strLocation = 'mainPage.php';
@@ -87,6 +88,7 @@ try {
 } catch(exception $e) {
 	$strAlert= '에러발생 : ' . $e->getMessage();
 	$strLocation = 'mainPage.php';
+	fnAlert($strAlert,$strLocation);
 	/* 에러발생 함수 */
 	if ($Conn) {
 		if ($bTrans_check == true) {

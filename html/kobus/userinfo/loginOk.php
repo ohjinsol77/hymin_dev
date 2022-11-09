@@ -3,14 +3,18 @@ error_reporting( E_ALL );
 ini_set( "display_errors", 1 );
 include('../function/function.php');
 try{
-	$strUserid = $_POST['id'];
-	$strUserpw = $_POST['pw'];
-	if(!isset($strUserid) & empty($struserid)){
+
+	if(!isset($_POST['userid']) & empty($_POST['userid'])){
 		throw new exception('p값 오류');
 	}
-	if(!isset($strUserpw) & empty($struserpw)){
+
+	if(!isset($_POST['userpw']) & empty($_POST['userpw'])){
 		throw new exception('p값 오류');
 	}
+	
+	$strUserid = $_POST['userid'];
+	$strUserpw = $_POST['userpw'];
+
 
 	/* DB 연결 시작 */
 	$Classdb = new database;
@@ -20,12 +24,11 @@ try{
 	}
 	
 	$qrySelect = "
-		SELECT number, id, pw, name 
+		SELECT usernumber, userid, userpw, username 
 		  FROM userinfo 
-		 WHERE id = " . $strUserid . "  and pw = " . $strUserpw . "
+		 WHERE userid = " . $strUserid . "  and userpw = " . $strUserpw . "
 	";
 	$rstSelect = mysqli_query($Conn,$qrySelect);
-
 	if (!$rstSelect) {
 		throw new exception('정보 조회 오류');
 	}
@@ -35,12 +38,19 @@ try{
 	}
 	
 	$rgSelect = mysqli_fetch_array($rstSelect);
+	if (!$rgSelect) {
+		throw new exception('배열 입력에 실패했습니다.');
+	}
+
+	if ($rgSelect == null) {
+		throw new exception('빈값입니다.');
+	}
 
 	session_start();
-	$_SESSION['number'] = $rgSelect['number'];
-	$_SESSION['userid'] = $rgSelect['id'];
-	$_SESSION['userpw'] = $rgSelect['pw'];
-	$_SESSION['name'] =  $rgSelect['name'];
+	$_SESSION['usernumber'] = $rgSelect['usernumber'];
+	$_SESSION['userid'] = $rgSelect['userid'];
+	$_SESSION['userpw'] = $rgSelect['userpw'];
+	$_SESSION['username'] =  $rgSelect['username'];
 
 	$strAlert = '로그인 성공';
 	$strLocation = 'mainPage.php';

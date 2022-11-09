@@ -5,7 +5,7 @@ include('../function/function.php');
 session_start();
 try {
 	/*세션 및 포스트값 확인*/
-	if (!isset($_SESSION['number'])) {
+	if (!isset($_SESSION['usernumber'])) {
 		throw new exception('로그인이 필요합니다.');
 	}
 
@@ -13,7 +13,7 @@ try {
 		throw new exception('로그인이 필요합니다.');
 	}
 
-	if (!isset($_SESSION['name'])) {
+	if (!isset($_SESSION['username'])) {
 		throw new exception('로그인이 필요합니다.');
 	}
 
@@ -26,12 +26,13 @@ try {
 	}
 	
 	/* 변수 초기화 */
-	$strNumber = $_SESSION['number'];
+	$strNumber = $_SESSION['usernumber'];
 	$strUserid = $_SESSION['userid'];
-	$strName = $_SESSION['name'];
+	$strName = $_SESSION['username'];
 	$nType = $_POST['withdraw_type'];
-	$nMil_withdraw = $_POST['mil_withdraw']-1000;
+	$nMil_withdraw = $_POST['mil_withdraw']+1000;
 	$bTrans_check = true;
+	$strMil_use = '마일리지 출금';
 	
 	/* DB 연결 시작 */
 	$Classdb = new database;
@@ -48,12 +49,13 @@ try {
 	/* 마일리지 정보 테이블에 정보 입력 */
 	$qryInsert = "
 		INSERT INTO mileage SET
-			number =		" . $strNumber . ",
-			id =			'" . $strUserid . "',
-			name =			'" . $strName . "',
+			usernumber =		" . $strNumber . ",
+			userid =			'" . $strUserid . "',
+			username =			'" . $strName . "',
 			mil_chargeday =	now(),
 			mil_type =		" . $nType . ",
-			mil_use =		" . $nMil_withdraw . "
+			mil_charge =	" . $nMil_withdraw . ",
+			mil_use =		'" . $strMil_use . "'
 	";	
 	
 	$rstInsert = mysqli_query($Conn, $qryInsert);
@@ -69,12 +71,12 @@ try {
 	/* 마일리지 차감 데이터 업데이트 */
 	$qryUpdate = "
 		UPDATE userinfo
-		  SET mil_amount = mil_amount - " . $nMil_withdraw . " 
-		 WHERE id = '" . $strUserid . "'
+		  SET amount = amount - " . $nMil_withdraw . " 
+		 WHERE userid = '" . $strUserid . "'
 	";
 	$rstUpdate = mysqli_query($Conn, $qryUpdate);	#테이블에 unsigned 넣어서 양수만 받을 수 있음
 	if (!$rstUpdate) {
-		throw new exception('쿼리 오류');
+		throw new exception('출금액과 보유금액을 확인하세요 오류');
 	}
 	
 	if (mysqli_affected_rows($Conn) < 1) {

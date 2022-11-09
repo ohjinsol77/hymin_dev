@@ -8,13 +8,13 @@ try {
 	if (!isset($_SESSION['userid'])) {
 		throw new exception('로그인이 필요합니다.');
 	}
-	if (!isset($_SESSION['name'])) {
+	if (!isset($_SESSION['username'])) {
 		throw new exception('로그인이 필요합니다.');
 	}
 
 	/* 변수 초기화 */
 	$strUserid = $_SESSION['userid'];
-	$strName = $_SESSION['name'];
+	$strName = $_SESSION['username'];
 
 	/* DB 연결 시작 */
 	$Classdb = new database;
@@ -25,9 +25,9 @@ try {
 	
 	/* 유저 마일리지 보유액 조회 */
 	$qrySelect = "
-		SELECT mil_amount 
+		SELECT amount 
 		  FROM userinfo 
-		 WHERE id = " . $strUserid . "
+		 WHERE userid = " . $strUserid . "
 	";
 	$rstSelect = mysqli_query($Conn,$qrySelect);
 	if (!$rstSelect) {
@@ -40,22 +40,11 @@ try {
 
 	/* 배열에 정보 대입 */
 	$rgSelect = mysqli_fetch_array($rstSelect);
-	if ($rgSelect === false) {
+	if ($rgSelect == false) {
 		throw new exception('배열 입력에 실패했습니다.');
 	}
 	if ($rgSelect == null) {
 		throw new exception('배열이 빈값입니다.');
-	}
-	
-	/* 마일리지 충전,사용 내역 조회 */
-	$qryCheck = "
-		SELECT mil_charge, mil_use, mil_chargeday
-		  FROM mileage 
-		 WHERE id = " . $strUserid . "
-	";
-	$rstCheck = mysqli_query($Conn, $qryCheck);
-	if (!$rstCheck) {
-		throw new exception('체크 쿼리 오류');
 	}
 
 } catch(exception $e) {
@@ -76,23 +65,11 @@ try {
 		<div>
 			<p>아이디 : <?=$strUserid?></p>
 			<p>이름 :	<?=$strName?></p>
-			<p>보유 마일리지 : <?=$rgSelect['mil_amount']?></p>
+			<p>보유 마일리지 : <?=$rgSelect['amount']?></p>
 			<input type = 'button' value = '홈으로 돌아가기' onclick = "window.location= '../userinfo/mainPage.php'">
 			<input type = 'button' value = '로그아웃' onclick = "window.location= '../userinfo/logout.php'">
-		</div>
-		<div>
-			<p>충전 마일리지 내역</p>
-
-			<?php
-			/* 사용 충전 내역 출력 */
-			while ($rgRow = mysqli_fetch_array($rstCheck)) {
-				if (!empty($rgRow['mil_charge'])) {
-					echo "++충전금액 : " . $rgRow['mil_charge'] . " 발생일시 : " . $rgRow['mil_chargeday'] . "<br><br>";
-				} elseif(!empty($rgRow['mil_use'])) {
-					echo "--사용금액 : " . $rgRow['mil_use'] . " 발생일시 : " . $rgRow['mil_chargeday'] . "<br><br>";
-				}
-			}	
-			?>
+			<input type = 'button' value = '사용 및 충전 내역' onclick = "window.location= '../mileage/mil_current.php'">
+			<input type = 'button' value = '예매 정보' onclick = "window.location= '../bus/bus_cancellForm.php'">
 		</div>
 	</body>
 </html>

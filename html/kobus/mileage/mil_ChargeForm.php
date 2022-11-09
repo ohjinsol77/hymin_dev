@@ -8,20 +8,12 @@ try {
 	if (!isset($_SESSION['userid'])) {
 		throw new exception('로그인이 필요합니다.');
 	}
-
-
-
 	
 } catch(exception $e) {
 	$strAlert= '에러발생 : ' . $e->getMessage();
 	$strLocation = '../userinfo/mainPage.php';
 	/* 에러발생 함수 */
 	fnAlert($strAlert,$strLocation);
-	if ($Conn) {
-		mysqli_close($Conn);
-		unset($Conn);
-	}
-	exit;
 }
 ?>
 <html>

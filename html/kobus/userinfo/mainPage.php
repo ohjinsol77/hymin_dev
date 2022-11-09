@@ -10,7 +10,8 @@
 			<li><a href = '../mileage/mil_ChargeForm.php' id = 'current'>마일리지 충전</a></li>
 			<li><a href = '../mileage/mil_withdrawForm.php' id = 'current'>마일리지 출금</a></li>
 			<li><a href = '../mileage/mil_check.php' id = 'current'>내 정보</a></li>
-			<li><a href = '../bus/bus_select.php' id = 'current'>버스 예매</a></li>
+			<li><a href = '../bus/bus_selectForm.php' id = 'current'>버스 예매</a></li>
+			<li><a href = '../bus/bus_cancellForm.php' id = 'current'>예매 취소</a></li>
 			
 		</ul>
 		<ul>
