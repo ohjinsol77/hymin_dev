@@ -6,7 +6,9 @@ session_start();
 try {
 	
 	if (!isset($_SESSION['userid'])) {
-		throw new exception('로그인이 필요합니다.');
+		$strAlert = $strAlert= '에러발생 : 로그인이 필요합니다' ;
+		$strLocation = '../userinfo/loginForm.php';
+		fnAlert($strAlert,$strLocation);
 	}
 		/* DB 연결 시작 */
 	$Classdb = new database;
@@ -16,25 +18,22 @@ try {
 	}
 	
 	$strUserid = $_SESSION['userid'];
-	$qrySelect = "
-		SELECT mil_use, mil_chargeday, mil_charge
-		FROM mileage
-		WHERE userid = " . $strUserid . " AND mil_type = 11 OR mil_type = 22 OR mil_type = 33 OR mil_type = 44 
+	$qrySelect_Reservation = "
+		SELECT ordernumber, leave_day, leave_time, route
+		FROM bus_reservation
+		WHERE userid = " . $strUserid . " and cancell_day is null
 	";
-
-
-	$rstSelect = mysqli_query($Conn,$qrySelect);
-	if(!$rstSelect){
+	$rstSelect_Reservation = mysqli_query($Conn,$qrySelect_Reservation);
+	if(!$rstSelect_Reservation){
 		throw new exception('쿼리 오류');
 	}
 
-	if(mysqli_num_rows($rstSelect) < 1) {
-		throw new exception('조회 오류');
+	if(mysqli_num_rows($rstSelect_Reservation) < 1) {
+		throw new exception('조회 가능한 내역이 없습니다.');
 	}
-
-} catch(exception $e) {
+}catch(exception $e) {
 	$strAlert= '에러발생 : ' . $e->getMessage();
-	$strLocation = '../bus/bus_cancellForm.php';
+	$strLocation = '../userinfo/mainPage.php';
 	/* 에러발생 함수 */
 	fnAlert($strAlert,$strLocation);
 }
@@ -45,22 +44,20 @@ try {
 		<p>버스 예매 취소 홈.</p>
 		<p>반환 수수료는 3%입니다.</p>
 		<form name = "bus_selectForm" method = "post" action = "../bus/bus_cancellOk.php">
-			<?php
-			while($rgSelect = mysqli_fetch_array($rstSelect)){
-				?>
-				<th><tr>
-				<input type = 'hidden' name = 'mil_use' value = '<?=$rgSelect['mil_use']?>' >
-				<input type = 'hidden' name = 'mil_chargeday' value = '<?=$rgSelect['mil_chargeday']?>' >
-				<input type = 'hidden' name = 'mil_charge' value = '<?=$rgSelect['mil_charge']?>' >
-				<input type = 'submit' value = '1' />
-				</th></tr>
-				
+			<select name = 'cancell'>
 				<?php
-			}
-					
-			?>
-
-	
+				while($rgReservation = mysqli_fetch_array($rstSelect_Reservation)){
+					?>									
+					<option value = '<?=$rgReservation['ordernumber']?>'>
+							출발 날짜	<?=$rgReservation['leave_day']?>
+							출발 시간	<?=$rgReservation['leave_time']?>
+							루트		<?=$rgReservation['route']?>
+					</option>
+					<?
+				}		
+				?>
+			</select>
+			<input type = 'submit' value = '예매 취소하기'>
 		</form>
 		<li>
 			<input type = 'button' value = '홈으로 돌아가기' onclick = "window.location= '../userinfo/mainPage.php'">

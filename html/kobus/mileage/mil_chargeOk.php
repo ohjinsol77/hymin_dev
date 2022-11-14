@@ -52,7 +52,7 @@ try {
 			usernumber =	" . $nNumber . ",
 			userid =		'" . $strUserid . "',
 			username =		'" . $strName . "',
-			mil_chargeday = now(),
+			mil_changeday = now(),
 			mil_type =		" . $nType . ",
 			mil_charge =	" . $nMil_charge . ",
 			mil_use =		'" . $strMil_use . "'
@@ -85,7 +85,7 @@ try {
 	#커밋
 	$Classdb->fnCommit();
 
-	$strAlert = '예매 취소 완료';
+	$strAlert = '마일리지 충전 완료';
 	$strLocation = '../userinfo/mainPage.php';
 	fnAlert($strAlert,$strLocation);
 } catch(exception $e) {

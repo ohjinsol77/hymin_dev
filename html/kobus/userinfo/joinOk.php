@@ -24,7 +24,7 @@ try {
 		throw new exception('p값 오류');
 	}
 
-	if (!isset($_POST['gender']) & empty($_POST['gender'])) {
+	if (!isset($_POST['age']) & empty($_POST['age'])) {
 		throw new exception('p값 오류');
 	}
 
@@ -34,7 +34,7 @@ try {
 	$strName = $_POST['username'];
 	$nMobile = $_POST['mobile'];
 	$strBirthday = $_POST['birthday'];
-	$nGender = $_POST['gender'];
+	$nAge = $_POST['age'];
 	
 
 	/* DB 연결 */
@@ -67,7 +67,7 @@ try {
 			mobile =		'" . $nMobile . "',
 			birthday =		'" . $strBirthday . "',
 			regday =		now(),
-			gender =		" . $nGender . ",
+			age =		" . $nAge . ",
 			amount =	0
 	";
 	$rstInsert = mysqli_query($Conn,$qryInsert);

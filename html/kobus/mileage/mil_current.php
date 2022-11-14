@@ -19,17 +19,31 @@ try {
 		throw new exception('데이터베이스 연결 실패');
 	}
 
-	/* 마일리지 충전,사용 내역 조회 */
-	$qryCheck = "
-		SELECT mil_charge, mil_use, mil_chargeday
+	/* 마일리지 충전 내역 조회 */
+	$qryCharge = "
+		SELECT mil_charge, mil_use, mil_changeday
 		  FROM mileage 
-		 WHERE userid = '" . $strUserid . "'
-		 order by mil_chargeday desc
+		 WHERE userid = '" . $strUserid . "' and mil_charge is not null
+		 order by mil_changeday desc
 	";
-	$rstCheck = mysqli_query($Conn, $qryCheck);
-	if (!$rstCheck) {
+	$rstCharge = mysqli_query($Conn, $qryCharge);
+	if (!$rstCharge) {
 		throw new exception('체크 쿼리 오류');
 	}
+
+	/* 마일리지 사용 내역 조회 */
+	$qryMinus ="
+		SELECT mil_minus, mil_use, mil_changeday
+		  FROM mileage 
+		 WHERE userid = '" . $strUserid . "' and mil_minus is not null
+		 order by mil_changeday desc
+	";
+	$rstMinus = mysqli_query($Conn, $qryMinus);
+	if (!$rstMinus) {
+		throw new exception('체크 쿼리 오류');
+	}
+
+
 
 } catch(exception $e) {
 	$strAlert= '에러발생 : ' . $e->getMessage();
@@ -47,12 +61,22 @@ try {
 	<body align = 'center'>
 		<h2>마일리지 사용 및 충전 내역</h2>
 			<p>마일리지 내역</p>
-			<p><table border=1 align = 'center'>
+			<p>충전내역<table border=1 align = 'center'>
 				<?php
-					/* 사용 충전 내역 출력 */
-					while ($rgRow = mysqli_fetch_array($rstCheck)) {
+					/* 충전 내역 출력 */
+					while ($rgCharge = mysqli_fetch_array($rstCharge)) {
 						?>
-						<tr><th>금액 = <?=$rgRow['mil_charge']?>/ 유동 내역 = <?=$rgRow['mil_use']?>/ 일시 = <?=$rgRow['mil_chargeday']?></th></tr>
+						<tr><th>금액 = <?=$rgCharge['mil_charge']?>/ 유동 내역 = <?=$rgCharge['mil_use']?>/ 일시 = <?=$rgCharge['mil_changeday']?></th></tr>
+						<?php
+					}
+				?>
+			</table><p>
+			<p>사용 내역<table border=1 align = 'center'>
+				<?php
+					/* 사용 내역 출력 */
+					while ($rgMinus = mysqli_fetch_array($rstMinus)) {
+						?>
+						<tr><th>금액 = <?=$rgMinus['mil_minus']?>/ 유동 내역 = <?=$rgMinus['mil_use']?>/ 일시 = <?=$rgMinus['mil_changeday']?></th></tr>
 						<?php
 					}
 				?>

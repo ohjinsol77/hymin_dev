@@ -69,7 +69,7 @@ try {
 			<input type = 'button' value = '홈으로 돌아가기' onclick = "window.location= '../userinfo/mainPage.php'">
 			<input type = 'button' value = '로그아웃' onclick = "window.location= '../userinfo/logout.php'">
 			<input type = 'button' value = '사용 및 충전 내역' onclick = "window.location= '../mileage/mil_current.php'">
-			<input type = 'button' value = '예매 정보' onclick = "window.location= '../bus/bus_cancellForm.php'">
+			<input type = 'button' value = '예매 정보' onclick = "window.location= '../bus/bus_check.php'">
 		</div>
 	</body>
 </html>

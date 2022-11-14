@@ -52,9 +52,9 @@ try {
 			usernumber =		" . $strNumber . ",
 			userid =			'" . $strUserid . "',
 			username =			'" . $strName . "',
-			mil_chargeday =	now(),
+			mil_changeday =	now(),
 			mil_type =		" . $nType . ",
-			mil_charge =	" . $nMil_withdraw . ",
+			mil_minus =	" . $nMil_withdraw . ",
 			mil_use =		'" . $strMil_use . "'
 	";	
 	
